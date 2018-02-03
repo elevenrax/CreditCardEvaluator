@@ -1,6 +1,6 @@
 # Credit Card Number Evaluator
 
-A simple Java (gradle) project to determine if Credit Card Numbers are valid. 
+A simple Java project to determine if Credit Card Numbers are valid. 
 
 ## Definition
 
