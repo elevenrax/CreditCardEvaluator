@@ -11,6 +11,33 @@ A credit card number is assumed valid if:
 * It passes the Luhn check (https://en.wikipedia.org/wiki/Luhn_algorithm). For credit card
 numbers, the Luhn check digit is the last digit of the sequence.
 
+## How To Use
+```
+        // Make a new CreditCard
+        // Will throw a RuntimeException if the card is not a known brand.
+        CreditCard card = new CreditCard("222100345345");
+
+        // What Brand is the card?
+        System.out.println( card.getCreditCardBrand() );
+
+        // Access ranges for CreditCard Brands
+        System.out.println("Visa range is : " + CreditCardBrandDeterminer.VISA_MIN +
+                " to " + CreditCardBrandDeterminer.VISA_MAX);
+
+        // Is the Card Valid? This validates the card against ALL criteria.
+        // A card is only valid if it passes all the tests.
+        CreditCardValidator validator = new CreditCardValidator(card);
+        System.out.println("Is Card Valid? " + validator.isValid());
+
+        // Granular Validity - Test if the card is well formed, this includes:
+        // No letters, no numbers starting with a zero, and between 12 - 19 digits
+        boolean numberWellFormed = CardNumberWellFormedValidator.validate(card);
+        System.out.println("Is Number Well Formed? " + numberWellFormed);
+
+        boolean luhnCheckSuccess = new LuhnCheckValidator(card).validate();
+        System.out.println("Is Successful in LuhnCheck? " + luhnCheckSuccess);
+```
+
 ## Design Choices and Assumptions
 
 The biggest assumption made was in `CardNumberWellFormedValidator`. This will return `false` at the first instance
