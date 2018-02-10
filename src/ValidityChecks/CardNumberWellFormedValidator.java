@@ -14,6 +14,11 @@ import Card.CreditCard;
  */
 public class CardNumberWellFormedValidator {
 
+    /**
+     * Validates a credit card whether it is well formed.
+     * @param card The credit card to validate
+     * @return Whether the card is valid
+     */
     public static boolean validate(CreditCard card) {
 
         String cardNumber = card.getCreditCardNumber();

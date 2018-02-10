@@ -2,6 +2,8 @@ package ValidityChecks;
 
 import Card.CreditCard;
 
+import java.util.Arrays;
+
 
 /**
  *  The Luhn Algorithm works as follows (for determining validity in this context, not calculating the check-digit).
@@ -29,17 +31,23 @@ import Card.CreditCard;
  */
 public class LuhnCheckValidator {
 
-    CreditCard mCard;
+    private CreditCard mCard;
 
     public LuhnCheckValidator(CreditCard card) {
         mCard = card;
     }
 
+    /**
+     * Performs the full LuhnCheck Validation on a CreditCard
+     * @return Whether the card is valid under the LuhnCheck
+     */
     public boolean validate() {
 
         // Set up
         String cardNumberAsString = mCard.getCreditCardNumber();
         int creditCardNumberLength = cardNumberAsString.length();
+
+        // The Credit Card int array we will work with
         int[] cardNumberIntArray = new int[creditCardNumberLength];
 
         for (int i = 0; i < creditCardNumberLength; i++) {
@@ -53,32 +61,59 @@ public class LuhnCheckValidator {
                 For ODD length numbers, we double every odd index value.
             The last digit is the check-digit and it never gets doubled.
          */
+        boolean isEvenNumberCardNumber = isCardNumberEvenInLength(creditCardNumberLength);
+
+        // Apply doubling formula.
+        applyLuhnDouble(cardNumberIntArray, isEvenNumberCardNumber);
+
+        // Valid if the sum off all numbers ends in zero.
+        return isLuhnValid(cardNumberIntArray);
+    }
+
+
+    /**
+     * Determines whether the card is even or odd in length
+     * @param creditCardNumberLength The Length of the credit card
+     * @return Whether the card is even in length
+     */
+    private boolean isCardNumberEvenInLength(int creditCardNumberLength) {
         boolean isEvenNumberCardNumber = false;
         if ((creditCardNumberLength % 2) == 0) {
             isEvenNumberCardNumber = true;
         }
+        return isEvenNumberCardNumber;
+    }
 
-        // Apply doubling formula.
-        for (int i=0; i < creditCardNumberLength; i++) {
+
+    /**
+     * Doubles the second left most digit per the requirements of the Luhh Algorithm.
+     * @param creditCardNumbers The credit card number as an int array
+     * @param isEvenNumberCardNumber Whether the card is odd or even in length
+     */
+    private void applyLuhnDouble(int[] creditCardNumbers, boolean isEvenNumberCardNumber) {
+        for (int i=0; i < creditCardNumbers.length; i++) {
             if ( shouldDoubleValueAtThisIndex(i, isEvenNumberCardNumber) ) {
-                cardNumberIntArray[i] = cardNumberIntArray[i] * 2;
+                creditCardNumbers[i] *= 2;
 
                 // Subtract Nine from product if > 9
-                if (cardNumberIntArray[i] > 9) {
-                    cardNumberIntArray[i] = cardNumberIntArray[i] - 9;
+                if (creditCardNumbers[i] > 9) {
+                    creditCardNumbers[i] -= 9;
                 }
             }
         }
+    }
 
-        // Sum all values now.
-        int sum = 0;
-        for (int i = 0; i < creditCardNumberLength; i++) {
-            sum += cardNumberIntArray[i];
-        }
 
-        // Valid if the sum off all numbers ends in zero.
+    /**
+     * Determines whether the credit card passes the Luhn Check
+     * @param creditCardNumbers The int array of credit card numbers
+     * @return Whether the card passes the Luhn Check.
+     */
+    private boolean isLuhnValid(int[] creditCardNumbers) {
+        int sum = Arrays.stream(creditCardNumbers).sum();
         return sum % 10 == 0;
     }
+
 
     /**
      * Given an index and whether the card's number length is odd/even, decides whether the algorithm

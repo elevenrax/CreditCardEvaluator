@@ -1,18 +1,11 @@
 package Card;
 
 /**
- *  A credit card is branded as follows:
- *     VISA:            400000 - 499999
- *     MasterCard:      222100 - 272099
- *                      510000 - 559999
- *     ChinaUnionPay:   620000 - 629999
- *     Maestro          500000 - 509999
- *                      560000 - 629999
- *
- *     Where CUP and Maesto overlap, CUP takes priority
+ *  Determines the Brand of a Credit Card
+ *  The CreditCard itself handles its own brand.
+ *  This class is invoked in the Constructor of CreditCard.
  */
 public class CreditCardBrandDeterminer {
-
 
     // Constants for card range
     public static final int VISA_MIN = 400000;
@@ -34,7 +27,11 @@ public class CreditCardBrandDeterminer {
     public static final int MAESTRO_MAX_RANGE_TWO = 699999;
 
 
-
+    /**
+     * Determines the brand of a credit card based on its first six digits
+     * @param card - The Credit Card to get the brand
+     * @return A value from the Enum Type CardBrand, corresponding to the brand of the card.
+     */
     public static CreditCard.CardBrand determineBrand(CreditCard card) {
         int brandNumber = card.getFirstSixDigitsForBrandIdentification();
         CreditCard.CardBrand brand;
@@ -46,7 +43,7 @@ public class CreditCardBrandDeterminer {
 
         // MASTERCARD
         else if ( numberInRange(brandNumber, MASTERCARD_MIN_RANGE_ONE, MASTERCARD_MAX_RANGE_ONE)
-                || numberInRange(brandNumber, MASTERCARD_MIN_RANGE_TWO, MASTERCARD_MAX_RANGE_TWO) ) {
+                  || numberInRange(brandNumber, MASTERCARD_MIN_RANGE_TWO, MASTERCARD_MAX_RANGE_TWO) ) {
             brand = CreditCard.CardBrand.MASTERCARD;
         }
 
